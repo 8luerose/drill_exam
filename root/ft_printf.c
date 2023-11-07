@@ -6,17 +6,19 @@
 /*   By: taehkwon <taehkwon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 19:36:26 by taehkwon          #+#    #+#             */
-/*   Updated: 2023/10/23 20:01:26 by taehkwon         ###   ########.fr       */
+/*   Updated: 2023/11/07 16:22:41 by taehkwon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h>
 
 void ft_putchar(char c, int *bytes)
 {
 	int write_len;
 
 	write_len = write(1, &c, 1);
+	// printf("len : %d\n", write_len);
 	if (write_len == -1)
 	{
 		*bytes = -1;
@@ -78,8 +80,10 @@ static void check(char c, va_list *ap, int *bytes)
 		ft_print_number(va_arg(*ap, int), "0123456789", 10, bytes);
 	else if (c == 'x')
 		ft_print_number(va_arg(*ap, unsigned int), "0123456789abcdef", 16, bytes);
-	else
+	else if (c == '%')
 		ft_putchar(c, bytes);
+	else
+		*bytes = -1;
 
 }
 
@@ -100,6 +104,7 @@ int ft_printf(const char *format, ...)
 			ft_putchar(format[i], &bytes);
 		if (bytes == -1)
 		{
+			// printf("!!\n");
 			va_end(ap);
 			return (bytes);
 		}
