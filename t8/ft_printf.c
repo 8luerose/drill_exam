@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: taehkwon <taehkwon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/07 12:48:56 by taehkwon          #+#    #+#             */
-/*   Updated: 2023/11/20 21:01:22 by taehkwon         ###   ########.fr       */
+/*   Created: 2023/11/20 21:04:20 by taehkwon          #+#    #+#             */
+/*   Updated: 2023/11/20 21:58:06 by taehkwon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void ft_putchar(char c, int *bytes)
 {
 	int write_len;
-	
+
 	write_len = write(1, &c, 1);
 	if (write_len == -1)
 	{
@@ -28,7 +28,7 @@ void ft_putchar(char c, int *bytes)
 
 void ft_putstr(char *str, int *bytes)
 {
-	int i;
+	size_t i;
 
 	if (str == 0)
 	{
@@ -51,35 +51,37 @@ void ft_putstr(char *str, int *bytes)
 void ft_print_number(long n, char *base_arr, int len, int *bytes)
 {
 	char c;
-	
-	if (n < 0)
+	long long nb;
+
+	nb = (long long)n;
+	if (nb < 0)
 	{
 		ft_putchar('-', bytes);
-		n = -n;
+		nb = -nb;
 	}
 	if (*bytes == -1)
 		return ;
-	if (n >= len)
-		ft_print_number(n / len, base_arr, len, bytes);
+	if (nb >= len)
+		ft_print_number(nb / len, base_arr, len, bytes);
 	if (*bytes == -1)
 		return ;
 	
-	c = base_arr[n % len];
+	c = base_arr[nb % len];
 	ft_putchar(c, bytes);
 	if (*bytes == -1)
 		return ;
 }
 
-static void check(char c, va_list *ap, int *bytes)
+void check(char c, va_list ap, int *bytes)
 {
 	if (c == 's')
-		ft_putstr((char *)va_arg(*ap, char *), bytes);
+		ft_putstr((char *)va_arg(ap, char *), bytes);
 	else if (c == 'd')
-		ft_print_number(va_arg(*ap, int), "0123456789", 10, bytes);
+		ft_print_number(va_arg(ap, int), "0123456789", 10, bytes);
 	else if (c == 'x')
-		ft_print_number(va_arg(*ap, unsigned int), "0123456789abcdef", 16, bytes);
+		ft_print_number(va_arg(ap, unsigned int), "0123456789abcdef", 16, bytes);
 	else
-		ft_putchar(c, bytes);
+		*bytes = -1;
 }
 
 int ft_printf(const char *format, ...)
@@ -94,7 +96,7 @@ int ft_printf(const char *format, ...)
 	while (format[i])
 	{
 		if (format[i] == '%')
-			check(format[++i], &ap, &bytes);
+			check(format[++i], ap, &bytes);
 		else
 			ft_putchar(format[i], &bytes);
 		if (bytes == -1)
@@ -106,5 +108,4 @@ int ft_printf(const char *format, ...)
 	}
 	va_end(ap);
 	return (bytes);
-
 }
