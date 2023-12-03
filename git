@@ -1,0 +1,1 @@
+git filter-repo --mailmap <(echo '8luerose <8luerose@naver.com> <taehkwon@c5r4s2.42seoul.kr>') --force
