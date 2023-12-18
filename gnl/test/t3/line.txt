@@ -1,0 +1,3 @@
+Hello, World!
+Welcome to the get_next_line demo.
+This is the third line.
